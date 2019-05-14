@@ -4,6 +4,7 @@ import json
 import Net
 import hashlib
 import Log
+import time
 
 class JokeGenerator:
     def __init__(self,joke_db):
@@ -67,7 +68,7 @@ class JokeGenerator:
         try:
             self.log.put("running net")
             start_time = time.time()
-            raw_str = Net.run(1000) #runs the net for 2000 characters
+            raw_str = Net.run(1000).decode("utf-8") #runs the net for 1000 characters
             delta_time = time.time() - start_time
             self.log.put("finished running net. took " + str(delta_time) + " seconds, that's " + str(1000.0 / delta_time) + " seconds per character")
             self.log.put(type(raw_str))
@@ -78,7 +79,8 @@ class JokeGenerator:
             self.net_success = False
             self.log.put("couldn't run net")
         new_joke_arr = []
-        new_joke_arr = str(raw_str).split("\n")
+        raw_str.replace("|", " ")
+        new_joke_arr = raw_str.split("\n")
         if(len(new_joke_arr) > 2):
             for new_joke in new_joke_arr[1:-1]:
                 new_joke_pc = self.make_PC(new_joke)
