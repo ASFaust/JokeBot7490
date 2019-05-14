@@ -3,6 +3,7 @@ import random
 import json
 import Net
 import hashlib
+import Log
 
 class JokeGenerator:
     def __init__(self,joke_db):
@@ -10,6 +11,7 @@ class JokeGenerator:
         self.db = {}
         self.replacement_dict = {}
         self.net_success = False
+        self.log = Log.Logger("logs/log.log")
         try:
             self.db = json.load(open(joke_db,'r'))
         except:
@@ -29,11 +31,14 @@ class JokeGenerator:
 
     def get_joke(self):
         if(len(self.db["new"]) <= 0):
-            self.generate_new()
+            self.log.put("need to generate new jokes")
+            self.generate_new() 
+            self.log.put("finished generating new jokes")
         joke = self.db["new"].pop(0)
         if(self.net_success):
             self.db["old"].append(hash(joke))
         self.save_db()
+        self.log.put("returning joke: " + joke)
         return joke
 
     def make_PC(self,text):
@@ -57,14 +62,15 @@ class JokeGenerator:
         return ret
 
     def generate_new(self):
-        raw_str = ""
+        raw_str = " \nnothing\n "
         self.net_success = True
         try:
             raw_str = Net.run(2000) #runs the net for 2000 characters
             self.net_success = True
         except:        
-            raw_str = " \nthis is a test. jokebot will start producing jokes soon.\n "
+            raw_str = " \nif this message shows up, something went wrong\n "
             self.net_success = False
+            self.log.put("couldn't run net")
         ret = raw_str.split("\n")
         if(len(ret) > 2):
             for new_joke in ret[1:-1]:
@@ -75,4 +81,7 @@ class JokeGenerator:
         else:
             self.db["new"] = ["Couldn't get any jokes from my stupid neural network, it did produce something but it's crap"]   
             self.net_success = False
+        self.log.put("generated " + str(len(self.db["new"])) + " new jokes")
+
+
         

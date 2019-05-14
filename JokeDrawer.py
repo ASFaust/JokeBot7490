@@ -2,6 +2,7 @@ from ClipartDatabase import *
 from PIL import Image, ImageDraw, ImageFont
 import random
 import time
+import Log
 
 class JokeDrawer:
     def __init__(self):    
@@ -9,17 +10,19 @@ class JokeDrawer:
         self.font = ImageFont.truetype('font.ttf',60)
         self.tiny_image = Image.new('RGB',(1,1),(255,255,255))
         self.padding = 20
+        self.log = Log.Logger("logs/log.log")
     
     def draw_joke(self,joke_text,filename):
         #first make the text formatting
         #to acquire the image size
-        keywords = self.get_keywords(joke_text,random.randint(4,8))#get 4 - 8 keywords
+        keywords = self.get_keywords(joke_text,random.randint(4,7))#get 4 - 7 keywords
         joke_text = self.format_joke(joke_text,max_line_len = 30)
         image_size = self.get_image_size(joke_text)
         bg_color = self.get_bg_color()
         joke_image = Image.new('RGBA',(image_size,image_size),bg_color)
-
+        self.log.put("drawing cliparts")
         self.draw_cliparts(joke_image,keywords)
+        self.log.put("drawing joke text: " + joke_text)
         self.draw_text(joke_image,joke_text,bg_color)    
         
         joke_image.save(filename)
@@ -119,3 +122,4 @@ class JokeDrawer:
                     current_len = 0         
             current_len += len(word)
         return ret
+

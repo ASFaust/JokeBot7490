@@ -1,15 +1,19 @@
 from ImageDownloader import *
 import os
 import random
+import Log
 
 class ClipartDatabase:
     def __init__(self,base_folder):
         if not os.path.isdir(base_folder):
+            self.log.put("creating base folder for clipart db")
             os.mkdir(base_folder)
         if not os.path.isdir("download"):
+            self.log.put("creating download folder for clipart db")
             os.mkdir("download")
         self.base_folder = base_folder
         self.image_downloader = ImageDownloader("download")
+        self.log = Log.Logger("logs/log.log")
     
     def get_clipart(self,keyword):
         img_dir = self.base_folder + "/" + keyword
