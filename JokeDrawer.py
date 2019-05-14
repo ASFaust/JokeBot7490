@@ -113,8 +113,9 @@ class JokeDrawer:
                 ret += "\n"
                 current_len = 0
             ret += word + " "    
-            if(word[-1] in ".?!\""):
-                ret += "\n"
-                current_len = 0         
+            if(len(word) > 1):
+                if(word[-1] in ".?!\""):
+                    ret += "\n"
+                    current_len = 0         
             current_len += len(word)
         return ret
