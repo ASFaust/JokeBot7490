@@ -93,6 +93,8 @@ class JokeDrawer:
         good_keywds = ["funny","haha","laughing","joke","robot"]
         ret.append(random.choice(good_keywds))
         n_keywords -= 1
+        if(len(big_word_arr) <= 0):
+            big_word_arr = word_arr
         for i in range(n_keywords):
             keywd = random.choice(big_word_arr)
             keywd = keywd.lower()
