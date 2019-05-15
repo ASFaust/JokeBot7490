@@ -17,7 +17,12 @@ class JokeBot7490:
             self.log.put("getting joke")
             joke_text = self.generator.get_joke()
             self.log.put("drawing joke")
-            self.drawer.draw_joke(joke_text,"out.png")
+            try:
+                self.drawer.draw_joke(joke_text,"out.png")
+            except Exception as e:
+                self.log.put(str(e))
+                time.sleep(10)
+                continue
             self.log.put("posting joke")
             self.fb.post_image("out.png","HERE IS YOUR JOKE") 
             delta_time = time.time() - start_time
